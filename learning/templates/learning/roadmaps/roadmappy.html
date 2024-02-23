@@ -1,0 +1,363 @@
+{% extends 'learning/base1.html' %}
+{% load static %}
+{% block css %}
+<style>
+    #article-containerlink {
+        background-color: #f0f0f0;
+    }
+
+    #article-containerlink.active {
+        transform: translateX(0);
+    }
+
+    .videos-container {
+        width: 100%;
+        padding: 20px;
+        display: flex;
+        flex-direction: row;
+        background-color: #f3f3f3;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .video-item:hover {
+        transform: scale(1.08);
+    }
+
+    .video-item {
+        background: #fff;
+        box-shadow: 0 0 29px 0 rgba(18, 66, 101, 0.08);
+        transition: all 0.3s ease-in-out;
+        list-style: none;
+        margin: 0px 20px;
+        padding: 0;
+        border: 1px solid #ddd;
+        border-radius: 16px;
+        overflow: hidden;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        height: 300px;
+    }
+
+    .video-item iframe {
+        width: 100%;
+        height: 100%;
+    }
+
+    .video-title {
+        padding: 10px;
+        background-color: #333;
+        color: #fff;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="roadmap-container"></div>
+<div id="msg" style="margin-left: 30%;">
+    <p>"YOU CAN ZOOM IN AND ZOOM OUT FOR CLEAR VISION"</p>
+
+</div>
+<div style="display: flex; justify-content: center; align-items: center;">
+    <div class="progress" style="margin-bottom: 50px; width: 70%; height: 20px;">
+        <div id="progress-bar" class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+</div>
+<div id="article-containergpt"
+    style="width: 100%; border-radius: 8px; padding: 20px; margin: 20px 0; transition: transform 0.3s ease-in-out; background-color: #d3d3d3; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+    <h3> AI Article response on the topic selected.  </h3>
+    <h2></h2>
+</div>
+
+<div id="videos" class="videos-container" style="margin: 20px 0;">
+    <h3> Youtube Video recommendation on the topic selected.  </h3>
+    <!-- Videos will be dynamically added here -->
+</div>
+
+<div>
+
+    <div id="article-containerlink"
+        style="width: 100%; border-radius: 8px; margin: 20px 0; padding: 20px; background-color: #fff2f2; transition: transform 0.3s ease-in-out;">
+        <h3> Website links on the topic selected.  </h3>
+    <!-- Content for article-containerlink goes here -->
+    </div>
+
+    <!-- Other content goes here -->
+</div>
+
+<!-- Include jQuery -->
+<script src=" https://code.jquery.com/jquery-3.6.4.min.js">
+</script>
+
+<!-- Add this script tag to your HTML file -->
+<script src="https://apis.google.com/js/api.js"></script>
+
+<script src="https://unpkg.com/vis-network@7.10.0/dist/vis-network.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const roadmapData = {
+            nodes: [
+                { id: 1, label: 'Introduction to Python', x: 100, y: 100, color: '#FFC300' },
+                { id: 2, label: 'Data Types and Variables', x: 100, y: 150, color: '#FFC300' },
+                { id: 3, label: 'Control Flow (if, else, elif)', x: 100, y: 200, color: '#FFC300' },
+                { id: 4, label: 'Functions and Modules', x: 100, y: 250, color: '#FFC300' },
+                { id: 5, label: 'Data Structures (Lists, Dictionaries)', x: 100, y: 300, color: '#FFC300' },
+                { id: 11, label: 'Arrays and Linked Lists', x: 600, y: 300, color: '#FFC300' },
+                { id: 12, label: 'Heaps, Stacks, and Queues', x: 600, y: 350, color: '#FFC300' },
+                { id: 19, label: 'Hash Tables', x: 600, y: 400, color: '#FFC300' },
+                { id: 20, label: 'Binary Search Trees', x: 600, y: 450, color: '#FFC300' },
+                { id: 21, label: 'Recursion', x: 600, y: 500, color: '#FFC300' },
+                { id: 22, label: 'Sorting Algorithms', x: 600, y: 550, color: '#FFC300' },
+                { id: 6, label: 'File Handling', x: 100, y: 400, color: '#FFC300' },
+                { id: 13, label: 'Reading and Writing Files', x: 400, y: 400, color: '#FFC300' },
+                { id: 7, label: 'Exception Handling', x: 100, y: 450, color: '#FFC300' },
+                { id: 14, label: 'Try-Except Blocks', x: 400, y: 450, color: '#FFC300' },
+                { id: 8, label: 'Object-Oriented Programming', x: 100, y: 500, color: '#FFC300' },
+                { id: 15, label: 'Classes and Objects', x: 400, y: 500, color: '#FFC300' },
+                { id: 9, label: 'Testing and Debugging', x: 100, y: 550, color: '#FFC300' },
+                { id: 16, label: 'Unit Testing', x: 400, y: 550, color: '#FFC300' },
+                { id: 10, label: 'Web Development (Flask, Django)', x: 100, y: 600, color: '#FFC300' },
+                { id: 17, label: 'Flask Web Framework', x: 400, y: 600, color: '#FFC300' },
+                { id: 18, label: 'Django Web Framework', x: 400, y: 650, color: '#FFC300' },
+            ],
+            edges: [
+                { 'from': 1, 'to': 2, smooth: { enabled: false } },
+                { 'from': 2, 'to': 3, smooth: { enabled: false } },
+                { 'from': 3, 'to': 4, smooth: { enabled: false } },
+                { 'from': 2, 'to': 5, smooth: { enabled: false } },
+                { 'from': 5, 'to': 6, smooth: { enabled: false } },
+                { 'from': 3, 'to': 7, smooth: { enabled: false } },
+                { 'from': 4, 'to': 8, smooth: { enabled: false } },
+                { 'from': 7, 'to': 9, smooth: { enabled: false } },
+                { 'from': 8, 'to': 10, smooth: { enabled: false } },
+                { 'from': 5, 'to': 11, smooth: { enabled: false } },
+                { 'from': 11, 'to': 12, smooth: { enabled: false } },
+                { 'from': 12, 'to': 19, smooth: { enabled: false } },
+                { 'from': 19, 'to': 20, smooth: { enabled: false } },
+                { 'from': 20, 'to': 21, smooth: { enabled: false } },
+                { 'from': 21, 'to': 22, smooth: { enabled: false } },
+                { 'from': 6, 'to': 13, smooth: { enabled: false } },
+                { 'from': 7, 'to': 14, smooth: { enabled: false } },
+                { 'from': 8, 'to': 15, smooth: { enabled: false } },
+                { 'from': 9, 'to': 16, smooth: { enabled: false } },
+                { 'from': 10, 'to': 17, smooth: { enabled: false } },
+                { 'from': 17, 'to': 18, smooth: { enabled: false } },
+
+
+            ]
+        };
+
+
+        const container = document.getElementById('roadmap-container');
+        const data = {
+            nodes: new vis.DataSet(roadmapData.nodes),
+            edges: new vis.DataSet(roadmapData.edges)
+        };
+        const options = {
+            nodes: {
+                fixed: true,
+                shape: 'box',
+                size: 40,
+                font: {
+                    color: '#000',
+                    size: 14,
+                    bold: true
+                }
+            },
+            edges: {
+                arrows: {
+                    to: {
+                        enabled: true,
+                        scaleFactor: 0.5
+                    }
+                },
+                color: {
+                    color: '#343a40',
+                    highlight: '#343a40',
+                    hover: '#343a40',
+                    inherit: 'from',
+                    opacity: 1.0
+                },
+                font: {
+                    color: '#343a40',
+                    size: 12,
+                    align: 'top'
+                },
+
+                physics: false,
+                interaction: {
+                    dragNodes: false,
+                    zoomView: false,
+                    dragView: false,
+                }
+            }
+        };
+        function generateAndDisplayLinks(nodeId) {
+            if (nodeId) {
+
+                const apiUrl = `/generate_links/${nodeId}/`;
+
+                // Fetch data from the API
+                fetch(apiUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Display the links in the article container
+                        const articleContainer = document.getElementById('article-containerlink');
+                        const linksHtml = data.links.map(link => `<a href="${link}" target="_blank">${link}</a>`).join('<br>');
+                        articleContainer.innerHTML = `<div>${linksHtml}</div>`;
+                    })
+                    .catch(error => console.error('Error:', error));
+            } else {
+                console.error('Node ID is not valid.');
+            }
+        };
+        function saveVideo(videoId, title) {
+            $.ajax({
+                url: `/save_video/${videoId}/${title}/`,
+                method: 'POST',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data.message);
+                    // Refresh the displayed videos after saving
+                    displaySavedVideos();
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        // Function to display saved videos
+        function displaySavedVideos() {
+            $.ajax({
+                url: '/display_saved_videos/',
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    console.log('Saved Videos:', data.videos);
+
+                    // Clear existing videos
+                    $('#videos').empty();
+
+                    // Display the videos on your page
+                    data.videos.forEach(video => {
+                        const videoItem = $('<div class="video-item">');
+                        videoItem.html(`
+                            <iframe width="100%" height="200" src="https://www.youtube.com/embed/${video.video_id}" frameborder="0" allowfullscreen></iframe>
+                            <div class="video-title">${video.title}</div>
+                        `);
+
+                        $('#videos').append(videoItem);
+                    });
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+        function generateAndDisplayVideos(nodeId) {
+            if (nodeId) {
+                console.log(nodeId);
+                $.ajax({
+                    url: `/generate_videos/${nodeId}/`,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.error) {
+                            console.error('Error:', data.error);
+                        } else {
+                            // Display the videos on your page
+                            const articleContainer = document.getElementById('videos');
+                            const videosHtml = data.videos.map(video => {
+                                return `
+                            <div class="video-item" >
+                                <iframe width="200" height="100" src="https://www.youtube.com/embed/${video.id}" frameborder="0" allowfullscreen></iframe>
+                                <p>${video.title}</p>
+                            </div>`;
+                            }).join('<br>');
+
+                            articleContainer.innerHTML = videosHtml;
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            } else {
+                console.error('Node ID is not valid.');
+            }
+        }
+
+
+
+        let clickedCount = 0;
+        const network = new vis.Network(container, data, options);
+        document.getElementById('article-containergpt').addEventListener('mousedown', function (event) {
+            event.preventDefault();
+        });
+        network.on("click", function (params) {
+            if (params.nodes.length > 0) {
+                const nodeId = params.nodes[0];
+                console.log(nodeId)
+                const selectedNode = data.nodes.get(nodeId);
+                console.log(selectedNode.label);
+                generateAndDisplayLinks(selectedNode.label);
+                generateAndDisplayVideos(selectedNode.label);
+
+                fetch(`/get_response/${selectedNode.label}/`)
+                    .then(response => response.json())
+                    .then(data => {
+
+                        const articleContainer = document.getElementById('article-containergpt');
+
+                        // Split the response into paragraphs based on line breaks
+                        const paragraphs = data.response.split('\n');
+
+                        // Create paragraph elements (<p>) for each paragraph
+                        const paragraphElements = paragraphs.map(paragraph => {
+                            const p = document.createElement('p');
+                            p.textContent = paragraph;
+                            return p;
+                        });
+
+                        // Append the paragraph elements to the article container
+                        articleContainer.innerHTML = '';
+                        paragraphElements.forEach(p => articleContainer.appendChild(p));
+                    })
+                    .catch(error => console.error('Error:', error));
+
+
+
+                if (!selectedNode.done) {
+                    clickedCount++;
+                    selectedNode.done = true; // Add a 'done' property to track clicked nodes
+                    selectedNode.color = { background: '#28a745', border: '#343a40' };
+                    data.nodes.update(selectedNode);
+
+                    // Calculate percentage and update progress bar
+                    const totalNodes = data.nodes.length;
+                    const percentage = (clickedCount / totalNodes) * 100;
+
+                    // Update the progress bar (assuming you have an element with ID 'progress-bar')
+                    const progressBar = document.getElementById('progress-bar');
+                    progressBar.style.width = `${percentage}%`;
+                    progressBar.textContent = `${percentage.toFixed(2)}%`;
+
+                    if (percentage === 100) {
+                        window.alert('Congratulations! You have completed 100% of the roadmap.');
+
+                    }
+
+                }
+
+
+
+            }
+        });
+    });
+</script>
+
+{% endblock %}
