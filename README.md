@@ -37,11 +37,7 @@ To run this project locally, follow these steps:
 5. Start the development server: `python manage.py runserver`
 6. Access the application in your browser at `http://localhost:8000`
 
-## ⚙️ Configuration
 
-The following configurations can be modified in the `settings.py` file:
-
-- `OPENAI_API_KEY`: Your OpenAI GPT-3 API key.
 ## ⚙️ Configuration
 
 In the `settings.py` file, you'll find the following key-related configurations:
