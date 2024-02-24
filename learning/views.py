@@ -1,118 +1,28 @@
 from django.shortcuts import render
-
-# Create your views here.
-# learning/views.py
-from django.shortcuts import render
 from django.http import JsonResponse
 import openai
-
-
 from .roadmappy import generate_dynamic_roadmap_data
 from .roadmapdsa import generate_dynamic_roadmapdsa_data
+import requests
+from django.http import JsonResponse
+from googleapiclient.discovery import build
 
 
 def home_view(request):
     return render(request, 'learning/index.html')
-def visual(request):
-    return render(request, 'learning/visual.html')
-def linkedlist(request):
-    return render(request, 'learning/linkedlist.html')
-def hashmap(request):
-    return render(request, 'learning/hashmap.html')
-def sorting(request):
-    return render(request, 'learning/sorting.html')
-def hashing(request):
-    return render(request, 'learning/hashing.html')
-def trees(request):
-    return render(request, 'learning/trees.html')
-def recursive(request):
-    return render(request, 'learning/recursive.html')
-
-def bubblesort(request):
-    return render(request, 'learning/sorting/bubblesort.html') 
-
-def selectionsort(request):
-    return render(request, 'learning/sorting/selectionsort.html') 
-
-def mergesort(request):
-    return render(request, 'learning/sorting/mergesort.html') 
-
-def insertionsort(request):
-    return render(request, 'learning/sorting/insertionsort.html') 
-# Set your OpenAI API key
 
 def generate_dynamic_response(node_id):
     openai.api_key = ''
 
     prompt = f"Generate large content of around 300 words for node {node_id} in Python learning roadmap:"
     
-    # Use the OpenAI GPT model to generate content
+    # Used the OpenAI GPT model to generate content
     response = openai.Completion.create(
         engine="gpt-3.5-turbo-instruct",  # Choose the appropriate engine
         prompt=prompt,
-        max_tokens=500
+        max_tokens=650
     )
     
-    return response['choices'][0]['text']
-
-def generate_dynamic_responsec(node_id):
-    prompt = f"Generate content for node {node_id} in C learning roadmap:"
-
-    # Use the OpenAI GPT model to generate content
-    response = openai.Completion.create(
-        engine="gpt-3.5-turbo-instruct",  # Choose the appropriate engine
-        prompt=prompt,
-        max_tokens=300
-    )
-
-    return response['choices'][0]['text']
-
-def generate_dynamic_responsejava(node_id):
-    prompt = f"Generate content for node {node_id} in java learning roadmap:"
-
-    # Use the OpenAI GPT model to generate content
-    response = openai.Completion.create(
-        engine="gpt-3.5-turbo-instruct",  # Choose the appropriate engine
-        prompt=prompt,
-        max_tokens=300
-    )
-
-    return response['choices'][0]['text']
-
-def generate_dynamic_responsedsa(node_id):
-    prompt = f"Generate content for node {node_id} in dsa learning roadmap:"
-
-    # Use the OpenAI GPT model to generate content
-    response = openai.Completion.create(
-        engine="gpt-3.5-turbo-instruct",  # Choose the appropriate engine
-        prompt=prompt,
-        max_tokens=300
-    )
-
-    return response['choices'][0]['text']
-
-def generate_dynamic_responsedp(node_id):
-    prompt = f"Generate content for node {node_id} in dp learning roadmap:"
-
-    # Use the OpenAI GPT model to generate content
-    response = openai.Completion.create(
-        engine="gpt-3.5-turbo-instruct",  # Choose the appropriate engine
-        prompt=prompt,
-        max_tokens=300
-    )
-
-    return response['choices'][0]['text']
-
-def generate_dynamic_responsecpp(node_id):
-    prompt = f"Generate content for node {node_id} in cpp learning roadmap:"
-
-    # Use the OpenAI GPT model to generate content
-    response = openai.Completion.create(
-        engine="gpt-3.5-turbo-instruct",  # Choose the appropriate engine
-        prompt=prompt,
-        max_tokens=300
-    )
-
     return response['choices'][0]['text']
 
 def roadmap(request):
@@ -124,12 +34,7 @@ def roadmap(request):
 def roadmapdsa(request):
     roadmap_data = generate_dynamic_roadmapdsa_data()
     return render(request, 'learning/roadmaps/roadmapdsa.html', {'roadmap_data': roadmap_data})
-def roadmapdp(request):
-    roadmap_data = generate_dynamic_roadmapdp_data()
-    return render(request, 'learning/roadmaps/roadmapdp.html', {'roadmap_data': roadmap_data})
-def roadmapcpp(request):
-    roadmap_data = generate_dynamic_roadmapcpp_data()
-    return render(request, 'learning/roadmaps/roadmapcpp.html', {'roadmap_data': roadmap_data})
+
 
 def roadmaps(request):
     return render(request, 'learning/roadmaps.html')
@@ -143,20 +48,10 @@ def get_responsedsa(request, node_id):
     response_text = generate_dynamic_responsedsa(node_id)
     return JsonResponse({'response': response_text})
 
-
-
-
-
-
-
-# GENERATION OF 
-
-from django.http import JsonResponse
-from googleapiclient.discovery import build
-
 # Set your API key and Custom Search Engine ID
 API_KEY = ''
-CSE_ID = ''
+CSE_ID =''
+
 
 def get_search_results(query):
     service = build('customsearch', 'v1', developerKey=API_KEY)
@@ -172,8 +67,7 @@ def generate_links(request, query):
     return JsonResponse({'links': links7_list})
 
 
-from django.http import JsonResponse
-import requests
+
 
 def generate_and_display_videos(request, node_id):
 
