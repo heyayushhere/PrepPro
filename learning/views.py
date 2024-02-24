@@ -43,7 +43,7 @@ def insertionsort(request):
 
 def generate_dynamic_response(node_id):
     openai.api_key = ''
-# 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
+
     prompt = f"Generate large content of around 300 words for node {node_id} in Python learning roadmap:"
     
     # Use the OpenAI GPT model to generate content
@@ -177,7 +177,7 @@ import requests
 
 def generate_and_display_videos(request, node_id):
 
-    api_key = 'AIzaSyCsoDWSJfR0YORcSiw8LtTtB97D0E_NZZ4'
+    api_key = ''
 
         # Fetch data from the YouTube API
     api_url = f'https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=5&q={node_id}&key={api_key}'
